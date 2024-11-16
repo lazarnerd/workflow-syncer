@@ -7,6 +7,8 @@ echo $SSH_PRIVATE_KEY
 echo $WORKFLOW_REPOS
 # save the private key to a file if not already present
 if [ ! -f ~/.ssh/id_ed25519 ]; then
+    # replace spaces with newlines
+    $(echo $SSH_PRIVATE_KEY | tr " " "\n")
     echo $SSH_PRIVATE_KEY > ~/.ssh/id_ed25519
     chmod 600 ~/.ssh/id_ed25519
 fi
