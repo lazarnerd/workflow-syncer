@@ -2,6 +2,9 @@
 ROOT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 WORKFLOW_DIR="$ROOT_DIR/workflow-repos"
 
+
+echo $SSH_PRIVATE_KEY
+echo $WORKFLOW_REPOS
 # save the private key to a file if not already present
 if [ ! -f ~/.ssh/id_ed25519 ]; then
     echo $SSH_PRIVATE_KEY > ~/.ssh/id_ed25519
