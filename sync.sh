@@ -19,12 +19,8 @@ git config --global user.email "${GITHUB_EMAIL}"
 IFS=';' read -r -a REPOS <<< "$WORKFLOW_REPOS"
 for REPO in "${REPOS[@]}"
 do
-    echo "Cloning $REPO"
-    REPO_NAME=$(basename $REPO)
-    REPO_NAME="${REPO_NAME/.git/}"
-    if [ ! -d "$WORKFLOW_DIR/$REPO_NAME" ]; then
-        git clone $REPO $WORKFLOW_DIR/$REPO_NAME
-    fi
+    cd $WORKFLOW_DIR
+    gh repo clone $REPO
 done
 
 while true; do
