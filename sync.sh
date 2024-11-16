@@ -19,6 +19,7 @@ git config --global user.email "${GITHUB_EMAIL}"
 # add the private key to the ssh-agent
 eval "$(ssh-agent -s)"
 ssh-add ~/.ssh/id_ed25519
+ssh-keyscan https://github.com >> ~/.ssh/known_hosts
 
 
 # clone all repositories specified in the WORKFLOW_REPOS
