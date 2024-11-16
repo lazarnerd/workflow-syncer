@@ -3,23 +3,16 @@ ROOT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 WORKFLOW_DIR="$ROOT_DIR/workflow-repos"
 
 
-echo $SSH_PRIVATE_KEY
+echo $GIT_TOKEN
 echo $WORKFLOW_REPOS
-# save the private key to a file if not already present
-if [ ! -f ~/.ssh/id_ed25519_ ]; then
-    # replace spaces with newlines
-    echo $(echo $SSH_PRIVATE_KEY | tr " " "\n") > ~/.ssh/id_ed25519_
-    chmod 600 ~/.ssh/id_ed25519_
-fi
+apt update -y
+apt install -y gh
+gh auth login --with-token $GIT_TOKEN
+
 
 # Set name and mail for git
 git config --global user.name "${GITHUB_USER}"
 git config --global user.email "${GITHUB_EMAIL}"
-
-# add the private key to the ssh-agent
-eval "$(ssh-agent -s)"
-ssh-add ~/.ssh/id_ed25519_
-
 
 # clone all repositories specified in the WORKFLOW_REPOS
 # env variable into the workflow-repos directory
@@ -63,3 +56,4 @@ while true; do
     echo ""
   sleep 15
 done
+
