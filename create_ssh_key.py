@@ -9,4 +9,4 @@ key = key.strip()
 print("-----BEGIN OPENSSH PRIVATE KEY-----")
 for line in key.split(" "):
     print(line)
-print("----- END OPENSSH PRIVATE KEY-----")
+print("-----END OPENSSH PRIVATE KEY-----")
