@@ -13,6 +13,10 @@ if [ ! -f ~/.ssh/id_ed25519 ]; then
     chmod 600 ~/.ssh/id_ed25519
 fi
 
+# Set name and mail for git
+git config --global user.name "${GITHUB_USER}"
+git config --global user.email "${GITHUB_EMAIL}"
+
 # add the private key to the ssh-agent
 eval "$(ssh-agent -s)"
 ssh-add ~/.ssh/id_ed25519
@@ -23,6 +27,7 @@ ssh-add ~/.ssh/id_ed25519
 IFS=';' read -r -a REPOS <<< "$WORKFLOW_REPOS"
 for REPO in "${REPOS[@]}"
 do
+    echo "Cloning $REPO"
     REPO_NAME=$(basename $REPO)
     REPO_NAME="${REPO_NAME/.git/}"
     if [ ! -d "$WORKFLOW_DIR/$REPO_NAME" ]; then
