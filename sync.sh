@@ -2,6 +2,29 @@
 ROOT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 WORKFLOW_DIR="$ROOT_DIR/workflow-repos"
 
+# save the private key to a file if not already present
+if [ ! -f ~/.ssh/id_ed25519 ]; then
+    echo $SSH_PRIVATE_KEY > ~/.ssh/id_ed25519
+    chmod 600 ~/.ssh/id_ed25519
+fi
+
+# add the private key to the ssh-agent
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_ed25519
+
+
+# clone all repositories specified in the WORKFLOW_REPOS
+# env variable into the workflow-repos directory
+IFS=';' read -r -a REPOS <<< "$WORKFLOW_REPOS"
+for REPO in "${REPOS[@]}"
+do
+    REPO_NAME=$(basename $REPO)
+    REPO_NAME="${REPO_NAME/.git/}"
+    if [ ! -d "$WORKFLOW_DIR/$REPO_NAME" ]; then
+        git clone $REPO $WORKFLOW_DIR/$REPO_NAME
+    fi
+done
+
 while true; do
     # iterate over all directories in workflow-repos
     for d in $WORKFLOW_DIR/* ; do
