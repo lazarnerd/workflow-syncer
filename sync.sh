@@ -5,22 +5,33 @@ WORKFLOW_DIR="$ROOT_DIR/workflow-repos"
 
 echo $GIT_TOKEN
 echo $WORKFLOW_REPOS
-apt update -y
-apt install -y gh
-echo $GIT_TOKEN | gh auth login --with-token
-
+# save the private key to a file if not already present
+if [ ! -f ~/.ssh/id_ed25519 ]; then
+    # replace spaces with newlines
+    python $ROOT_DIR/create_ssh_key.py > ~/.ssh/id_ed25519
+    chmod 600 ~/.ssh/id_ed25519
+fi
 
 # Set name and mail for git
 git config --global user.name "${GITHUB_USER}"
 git config --global user.email "${GITHUB_EMAIL}"
+
+# add the private key to the ssh-agent
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_ed25519
+
 
 # clone all repositories specified in the WORKFLOW_REPOS
 # env variable into the workflow-repos directory
 IFS=';' read -r -a REPOS <<< "$WORKFLOW_REPOS"
 for REPO in "${REPOS[@]}"
 do
-    cd $WORKFLOW_DIR
-    gh repo clone $REPO
+    echo "Cloning $REPO"
+    REPO_NAME=$(basename $REPO)
+    REPO_NAME="${REPO_NAME/.git/}"
+    if [ ! -d "$WORKFLOW_DIR/$REPO_NAME" ]; then
+        git clone $REPO $WORKFLOW_DIR/$REPO_NAME
+    fi
 done
 
 while true; do
