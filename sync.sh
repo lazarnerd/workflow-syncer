@@ -7,7 +7,7 @@ echo $GIT_TOKEN
 echo $WORKFLOW_REPOS
 apt update -y
 apt install -y gh
-gh auth login --with-token $GIT_TOKEN
+echo $GIT_TOKEN | gh auth login --with-token
 
 
 # Set name and mail for git
