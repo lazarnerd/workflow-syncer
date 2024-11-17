@@ -1,0 +1,18 @@
+volumes:
+  comfy:
+    driver_opts:
+      type: "nfs"
+      o: "addr=${NAS_IP},nolock,soft,nfsvers=4"
+      device: ":${NAS_VOLUME}"
+
+services:
+  workflow-syncer:
+    image: lazarnerd/workflow-syncer:latest
+    build: .
+    volumes:
+      - comfy:/app/workflow-repos
+    environment:
+      - SSH_PRIVATE_KEY=${SSH_PRIVATE_KEY}
+      - WORKFLOW_REPOS=${WORKFLOW_REPOS}
+      - GITHUB_USER=${GITHUB_USER}
+      - GITHUB_EMAIL=${GITHUB_EMAIL}

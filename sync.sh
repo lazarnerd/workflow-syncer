@@ -8,7 +8,7 @@ echo $WORKFLOW_REPOS
 # save the private key to a file if not already present
 if [ ! -f ~/.ssh/id_ed25519 ]; then
     # replace spaces with newlines
-    python $ROOT_DIR/create_ssh_key.py > ~/.ssh/id_ed25519
+    python3 $ROOT_DIR/create_ssh_key.py > ~/.ssh/id_ed25519
     chmod 600 ~/.ssh/id_ed25519
 fi
 
